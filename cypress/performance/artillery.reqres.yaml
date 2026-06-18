@@ -1,0 +1,35 @@
+config:
+  target: "https://reqres.in"
+  
+  phases:
+    - duration: 30         
+      arrivalRate: 3       
+      name: "Yeni ReqRes API Yuk Testi"
+
+  payload:
+    path: "users.csv"
+    fields:
+      - "name"
+      - "email"
+      - "role"
+    order: "sequence"
+
+  ensure:
+    thresholds:
+      - "http.response_time.p95": 600  
+      - "http.response_time.p99": 1200 
+    conditions:
+      - expression: "http.codes.200 + http.codes.201 == http.requests" 
+
+scenarios:
+  - name: "Guncel ReqRes API Test Senaryosu"
+    flow:
+      - get:
+          url: "/api/test-suite/collections/users/records"
+      - think: 1
+      - post:
+          url: "/api/test-suite/collections/users/records"
+          json:
+            name: "{{ name }}"
+            email: "{{ email }}"
+            role: "{{ role }}"
