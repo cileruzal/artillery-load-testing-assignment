@@ -1,0 +1,50 @@
+name: Cypress E2E Test Automation Pipeline
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * *" # Runs automatically every day at 08:00 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    name: Execute Cypress Tests
+    container:
+      image: cypress/base:latest
+    
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install project dependencies
+        run: npm install
+
+      - name: Run Cypress automation tests
+        run: npx cypress run
+
+      - name: Archive Cypress test videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos
+          path: cypress/videos/**/*.mp4
+          retention-days: 1
+
+      - name: Archive Cypress test screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots/**/*
+          retention-days: 1
