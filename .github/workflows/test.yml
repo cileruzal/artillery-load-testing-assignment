@@ -3,7 +3,7 @@ name: Cypress E2E Test Automation Pipeline
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 8 * * *" # Runs automatically every day at 08:00 
+    - cron: "0 8 * * *" # Runs automatically every day at 08:00 UTC
   push:
     branches:
       - main
