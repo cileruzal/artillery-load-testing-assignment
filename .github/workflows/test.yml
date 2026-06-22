@@ -15,24 +15,15 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     name: Execute Cypress Tests
-    container:
-      image: cypress/base:latest
     
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install project dependencies
-        run: npm install
-
-      - name: Run Cypress automation tests
-        run: npx cypress run
-
+      # Resmi Cypress Action paketi: Kurulumu, önbelleği ve test koşumunu tek adımda güvenle yapar.
+      - name: Run Cypress Automation
+        uses: cypress-io/github-action@v5
+        
       - name: Archive Cypress test videos
         if: always()
         uses: actions/upload-artifact@v4
